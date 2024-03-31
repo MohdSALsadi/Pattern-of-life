@@ -1,0 +1,103 @@
+﻿
+@model IEnumerable<Pattern_of_life.Models.ShipActivity>
+<a href="@Url.Action("Create", "ShipActivity")" class="btn btn-success mb-3"><i class="bi bi-plus-circle-dotted"></i> Ship Activity</a>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>DTG</th>
+            <th>Name</th>
+            <th>Speed</th>          
+            <th>Vessel Type</th>
+            <th>Flag State</th>
+            <th>Activity Name</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var shipActivity in Model)
+        {
+            <tr>
+                <td>@shipActivity.ID</td>
+                <td>@shipActivity.DTG.ToShortDateString()</td>
+                <td>@shipActivity.Name</td>
+                <td>@shipActivity.Speed</td>
+                <td>@(shipActivity.VesselType != null ? shipActivity.VesselType.Name : "N/A")</td>
+                <td>@(shipActivity.FlagState != null ? shipActivity.FlagState.Name : "N/A")</td>
+                <td>@(shipActivity.ActivityName != null ? shipActivity.ActivityName.Name : "N/A")</td>
+
+               
+                <td>
+                    <button class="btn btn-info" onclick="showDetails('@shipActivity.ID')"> <i class=" bi bi-eye"></i></button>
+
+                    <a class="btn btn-primary" href="@Url.Action("Edit", "ShipActivity", new { id = shipActivity.ID })">
+                        <i class="bi bi-pencil-square"></i> <!-- Grgich icon for edit -->
+                    </a>
+
+                    <form class="d-inline" asp-action="Delete" asp-route-id="@shipActivity.ID" method="post">
+                        <button type="submit" class="btn btn-danger delete-btn">
+                            <i class="bi bi-trash"></i> <!-- Grgich icon for delete -->
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<!-- Modal for displaying details -->
+<div class="modal fade" id="shipActivityModal" tabindex="-1" role="dialog" aria-labelledby="shipActivityModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="shipActivityModalLabel">Ship Activity Details</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="shipActivityDetails">
+                <!-- Partial view for ship activity details will be loaded here -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script>
+        function showDetails(id) {
+            // AJAX request to load ship activity details into modal body
+            $.get('@Url.Action("Details", "ShipActivity")', { id: id })
+                .done(function (data) {
+                    $('#shipActivityDetails').html(data);
+                    $('#shipActivityModal').modal('show');
+                });
+        }
+
+        $('.delete-btn').click(function (e) {
+            e.preventDefault();
+            var form = $(this).closest('form');
+            var vesselTypeId = form.attr('data-id');
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
+        });
+        // Initialize Bootstrap modal plugin
+        $('#shipActivityModal').on('hidden.bs.modal', function () {
+            $(this).find('.modal-content').empty(); // Clear modal content when closed
+        });
+    </script>
+}

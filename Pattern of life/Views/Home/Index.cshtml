@@ -1,0 +1,105 @@
+﻿
+<head>
+    <title>Oman Coast Map</title>
+    <!-- Include Leaflet.js -->
+    <style>
+        /* Styling for the map container */
+        #map {
+            height: 400px;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        /* Styling for the latitude and longitude inputs */
+        .coordinates {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+            .coordinates label {
+                flex: 1;
+                margin-right: 10px;
+            }
+
+            .coordinates input {
+                flex: 2;
+            }
+
+        /* Styling for the page container */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        /* Styling for the submit button */
+        .btn-submit {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+            .btn-submit:hover {
+                background-color: #0056b3;
+            }
+    </style>
+</head>
+
+   @*  <div class="container">
+        <h1>Oman Coast Map</h1>
+        <div id="map"></div>
+        <div class="coordinates">
+            <label for="latitude">Latitude:</label>
+            <input type="text" id="latitude" value="23.6345" onchange="updateMarker()" />
+            <label for="longitude">Longitude:</label>
+            <input type="text" id="longitude" value="58.5018" onchange="updateMarker()" />
+        </div>
+        <button class="btn-submit">Submit</button>
+    </div> *@
+    <br />
+<div id="map" style="height: 500px;"></div>
+
+
+
+   @*  <script>
+        var map = L.map('map').setView([23.6345, 58.5018], 5);
+
+        L.tileLayer('https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}.png', {
+            maxZoom: 18
+        }).addTo(map);
+
+        var marker = L.marker([23.6345, 58.5018], {
+            draggable: true
+        }).addTo(map);
+
+        function updateMarker() {
+            var lat = parseFloat(document.getElementById('latitude').value);
+            var lng = parseFloat(document.getElementById('longitude').value);
+            marker.setLatLng([lat, lng]);
+            map.setView([lat, lng], 8);
+        }
+
+        marker.on('dragend', function (event) {
+            var position = marker.getLatLng();
+            document.getElementById('latitude').value = position.lat;
+            document.getElementById('longitude').value = position.lng;
+        });
+    </script> *@
+

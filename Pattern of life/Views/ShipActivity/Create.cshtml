@@ -1,0 +1,160 @@
+﻿@model ShipActivityViewModel
+
+<form asp-action="Create" id="createForm">
+    <div class="row">
+        <div class="col-md-6">
+
+            <div class="form-group">
+                <label asp-for="DTG">Date and Time</label>
+                <input asp-for="DTG" class="form-control" />
+                <span asp-validation-for="DTG" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Longitude">Longitude</label>
+                <input asp-for="Longitude" class="form-control" />
+                <span asp-validation-for="Longitude" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Speed">Speed</label>
+                <input asp-for="Speed" class="form-control" />
+                <span asp-validation-for="Speed" class="text-danger"></span>
+            </div>
+           
+            <div class="form-group">
+                <label asp-for="Course">Course</label>
+                <input asp-for="Course" class="form-control" />
+                <span asp-validation-for="Course" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IMO">IMO</label>
+                <input asp-for="IMO" class="form-control" />
+                <span asp-validation-for="IMO" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="POB">POB</label>
+                <input asp-for="POB" class="form-control" />
+                <span asp-validation-for="POB" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-6">
+
+            <div class="form-group">
+                <label asp-for="Name">Name</label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            @* Speed *@
+            <div class="form-group">
+                <label asp-for="Latitude">Latitude</label>
+                <input asp-for="Latitude" class="form-control" />
+                <span asp-validation-for="Latitude" class="text-danger"></span>
+            </div>
+           
+            <div class="form-group">
+                <label asp-for="Remarks">Remarks</label>
+                <input asp-for="Remarks" class="form-control" />
+                <span asp-validation-for="Remarks" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="VesselTypeID">Vessel Type</label>
+                <select asp-for="VesselTypeID" class="form-control" asp-items="@(new SelectList(Model.VesselTypes, "ID", "Name"))" required>
+                    <option value="">Select a Vessel Type</option>
+                </select>
+                <span asp-validation-for="VesselTypeID" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-md-8">
+                        <label asp-for="FlagStateID">Flag State</label>
+                        <select asp-for="FlagStateID" class="form-control" required>
+                            <option value="">Select a Flag State</option>
+                            @foreach (var flagState in Model.FlagStates)
+                            {
+                                <option value="@flagState.ID">@flagState.Name</option>
+                            }
+                        </select>
+                        <span asp-validation-for="FlagStateID" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4">
+
+                        <label asp-for="FlagStateID">Flag </label>
+                        <div>
+                            <img id="flagImage" src="" alt="Flag" style="width: 80px; height: 40px;" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <label asp-for="ActivityNameID">Activity Name</label>
+                <select asp-for="ActivityNameID" class="form-control" asp-items="@(new SelectList(Model.ActivityNames, "ID", "Name"))" required>
+                    <option value="">Select an Activity Name</option>
+                </select>
+                <span asp-validation-for="ActivityNameID" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+  @*   <div class="form-group">
+        <div>
+            <img id="flagImage" src="" alt="Flag" style="width: 50px; height: 30px;" />
+        </div>
+    </div> *@
+    <button style="margin:5px" type="submit" class="btn btn-primary">Submit Activity</button>
+</form>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script>
+        $(document).ready(function () {
+
+            $('#createForm').submit(function (e) {
+                e.preventDefault();
+                var form = $(this);
+                $.post(form.attr('Create'), form.serialize())
+                    .done(function () {
+                        Swal.fire(
+                            'Success!',
+                            'Your activity has been added.',
+                            'success'
+                        ).then(() => {
+                            window.location.href = '@Url.Action("Index", "ShipActivity")';
+                        });
+                    });
+            });
+
+            $('#FlagStateID').change(function () {
+                var Id = $(this).val();
+
+                console.log("Selected flagStateId:", Id); // Log the selected flag state ID
+
+                if (Id) {
+                    var url = '/FlagState/GetFlagImage/' + Id; // Construct the URL
+                    console.log("AJAX URL:", url); // Log the URL before making the AJAX call
+
+                    $.ajax({
+                        url: url, // Use the constructed URL
+                        type: 'GET',
+                        success: function (response) {
+                            // Convert absolute file path to relative URL
+                            var relativeUrl = response.imageUrl.replace("C:\\Users\\RNO\\Desktop\\Pattern of life\\Pattern of life\\wwwroot", "");
+
+                            // Set the relative URL as the src attribute of the image
+                            $('#flagImage').attr('src', relativeUrl);
+                        },
+                        error: function (xhr, status, error) {
+                            console.error('Error:', error); // Log any errors that occur during the AJAX call
+                        }
+                    });
+                }
+                else {
+                    $('#flagImage').attr('src', ''); // Clear the flag image src if no flag state is selected
+                }
+            });
+        });
+
+    </script>
+ 
+  
+}
