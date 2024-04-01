@@ -5,6 +5,7 @@ using Pattern_of_life.Repository.Interface;
 using Pattern_of_life.Repository;
 using Microsoft.Extensions.Logging;
 using Pattern_of_life.Controllers;
+using Pattern_of_life.Services;
 
 namespace Pattern_of_life
 {
@@ -25,7 +26,11 @@ namespace Pattern_of_life
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             builder.Services.AddControllersWithViews();
             builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-      
+            builder.Services.AddScoped<ShipActivityDensityCalculator>();
+            builder.Services.AddScoped<SettingsRepository>();
+
+
+
 
 
             //builder.Services.AddGoogleMaps(Configuration["GoogleMaps:ApiKey"]);

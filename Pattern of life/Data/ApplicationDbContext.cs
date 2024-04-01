@@ -14,6 +14,8 @@ namespace Pattern_of_life.Data
         public DbSet <VesselType> VesselType { get; set; }
         public DbSet <FlagState>  FlagStates { get; set; }  
         public  DbSet <ActivityName> ActivityName { get; set; }
+        public DbSet<Settings> Settings { get; set; }
+
 
 
 
