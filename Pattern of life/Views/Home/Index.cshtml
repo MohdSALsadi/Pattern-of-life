@@ -12,19 +12,22 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet.heat/dist/leaflet-heat.css" />
     <style>
         #map {
-            margin:3%;
+            margin: 3%;
             height: 450px;
         }
 
         .leaflet-container {
-            box-shadow:  20px 0 30px rgba(0, 0, 0, 0.2); /* تعيين الظلال الخفيفة على اليمين واليسار */
+            box-shadow: 20px 0 30px rgba(0, 0, 0, 0.2); /* تعيين الظلال الخفيفة على اليمين واليسار */
             border-radius: 5px; /* جعل الزاوية منحنية */
         }
     </style>
 </head>
 <body>
     <button class="btn btn-outline-info" id="updateThreshold">Update Distance Threshold</button>
-
+  @*   <div class="form-group">
+        <label for="dateFilter">Select Date:</label>
+        <input type="month" id="dateFilter" class="form-control">
+    </div> *@
     <div id="map"></div>
     <!-- Include Leaflet JavaScript -->
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
@@ -33,14 +36,18 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+
     <script>
-        //تمركز الخريطة على خريطة سلطنة عمان 
+
+        //تمركز الخريطة على خريطة سلطنة عمان
         var map = L.map('map').setView([21.6104, 58.5905], 5);
 
         // Add a tile layer to the map (OpenStreetMap)
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(map);
+
+        // Iterate over the model data and call the function to add markers
 
         // Create a heat map layer using the density data
         var heatMapData = [
@@ -49,25 +56,39 @@
             var latitude = entry.Key.Item1;
             var longitude = entry.Key.Item2;
             var intensity = entry.Value;
-            @Html.Raw($"[{latitude}, {longitude}, {intensity}],")
+            @Html.Raw($"[{latitude}, {longitude}, {intensity}*10],")
             // Multiply intensity by 10 for better visualization {intensity}*10]
 
         }
-                ];
+                                   ];
 
-        // var heat = L.heatLayer(heatMapData, { radius: 25 }).addTo(map);
-        var heat = L.heatLayer(heatMapData, {
-            radius: 20,//نصف قطر الدائرة
-            gradient: {
-                0.1: 'yellow', // Yellow for density between 0 and 0.3
-                0.5: 'orange', // Orange for density between 0.4 and 0.7
-                0.8: 'red' // Red for density between 0.8 and 1.0
-            }
-        }).addTo(map);
+                // var heat = L.heatLayer(heatMapData, { radius: 25 }).addTo(map);
+                var heat = L.heatLayer(heatMapData, {
+                radius: 5,//نصف قطر الدائرة
+                gradient: {
+                    0.1: 'yellow', // Yellow for density between 0 and 0.3
+                    0.5: 'orange', // Orange for density between 0.4 and 0.7
+                    0.8: 'red' // Red for density between 0.8 and 1.0
+                }
+            }).addTo(map);
         // Listen for move events and re-center the map on ship data
         map.on('move', function () {
             map.panTo([23.6104, 58.5905]); // Adjust the map's center to keep it fixed on ship data
         });
+        //marker with a popup label
+        @foreach (var entry in Model)
+        {
+            var latitude = entry.Key.Item1;
+            var longitude = entry.Key.Item2;
+            var intensity = entry.Value;
+            var label = latitude.ToString() + " " + longitude.ToString(); // Assuming the label is included in the third item of the tuple
+
+            // Create a marker with a popup label
+            @Html.Raw($@"
+            var marker = L.marker([{latitude}, {longitude}]).addTo(map);
+            marker.bindPopup('{label}');
+            ")
+        }
     </script>
     <script>
         $(document).ready(function () {

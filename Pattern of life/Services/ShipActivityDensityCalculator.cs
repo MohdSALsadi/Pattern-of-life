@@ -15,13 +15,6 @@ namespace Pattern_of_life.Services
             _settingsRepository = settingsRepository;
         }
         //حساب الشفافية
-        //public void CalculateDensity()
-        //{
-        //    double distanceThreshold = _settingsRepository.GetDistanceThreshold();
-        //    // Use distanceThreshold in density calculation
-        //    Console.WriteLine("Distance Threshold: " + distanceThreshold);
-        //}
-
         // Function to calculate density based on distance between data points
         //distanceThreshold=لتحديد الحد الأقصى للمسافة التي يعتبرها التطبيق بعيدة بما فيه الكفاية ليُظهرها أو يأخذها بعين الاعتبار في الحسابات.
 
@@ -77,25 +70,25 @@ namespace Pattern_of_life.Services
             }
             else
             {
-                densityMap.Add(point, 1);
+                densityMap.Add(point, 0.1);
             }
             //Tuple<double, double> point = Tuple.Create(latitude, longitude);
-            //double intensity = densityMap.ContainsKey(point) ? densityMap[point] : 0;
+            double intensity = densityMap.ContainsKey(point) ? densityMap[point] : 0;
 
-            //if (intensity <= 0.3)
-            //{
-            //    intensity += 0.1; // Increase intensity by 0.1 for the yellow range
-            //}
-            //else if (intensity <= 0.7)
-            //{
-            //    intensity += 0.4; // Increase intensity by 0.4 for the orange range
-            //}
-            //else
-            //{
-            //    intensity += 0.3; // Increase intensity by 0.3 for the red range
-            //}
+            if (intensity <= 0.3)
+            {
+                intensity += 0.1; // Increase intensity by 0.1 for the yellow range
+            }
+            else if (intensity <= 0.7)
+            {
+                intensity += 0.4; // Increase intensity by 0.4 for the orange range
+            }
+            else
+            {
+                intensity += 0.3; // Increase intensity by 0.3 for the red range
+            }
 
-            //densityMap[point] = intensity;
+            densityMap[point] = intensity;
         }
     }
 

@@ -4,7 +4,7 @@
 <table class="table">
     <thead>
         <tr>
-            <th>ID</th>
+            
             <th>DTG</th>
             <th>Name</th>
             <th>Speed</th>
@@ -18,7 +18,6 @@
         @foreach (var shipActivity in Model)
         {
             <tr>
-                <td>@shipActivity.ID</td>
                 <td>@shipActivity.DTG.ToShortDateString()</td>
                 <td>@shipActivity.Name</td>
                 <td>@shipActivity.Speed</td>

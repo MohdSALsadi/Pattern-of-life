@@ -6,6 +6,8 @@
         public DateTime DTG { get; set; }
         public double Longitude { get; set; } 
         public double Latitude { get; set; }  
+        public string LatitudeDMS { get; set; }
+        public string LongitudeDMS { get; set; }
         public double Course { get; set; }
         public int IMO { get; set; }
         public string POB { get; set; }        

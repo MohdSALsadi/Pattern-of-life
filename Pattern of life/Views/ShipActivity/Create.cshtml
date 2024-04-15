@@ -10,9 +10,14 @@
                 <span asp-validation-for="DTG" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Longitude">Longitude</label>
-                <input asp-for="Longitude" class="form-control" />
-                <span asp-validation-for="Longitude" class="text-danger"></span>
+                <label asp-for="Latitude">Latitude</label>
+                <input asp-for="Latitude" class="form-control" onchange="updateLatitudeDMS(this)"  />
+                <span asp-validation-for="Latitude" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LatitudeDMS">Latitude DMS</label>
+                <input asp-for="LatitudeDMS" class="form-control" readonly />
+                <span asp-validation-for="LatitudeDMS" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Speed">Speed</label>
@@ -43,13 +48,18 @@
                 <input asp-for="Name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
-            @* Speed *@
+
             <div class="form-group">
-                <label asp-for="Latitude">Latitude</label>
-                <input asp-for="Latitude" class="form-control" />
-                <span asp-validation-for="Latitude" class="text-danger"></span>
+                <label asp-for="Longitude">Longitude</label>
+                <input asp-for="Longitude" class="form-control" onchange="updateLongitudeDMS(this)" />
+                <span asp-validation-for="Longitude" class="text-danger"></span>
             </div>
-           
+            <div class="form-group">
+                <label asp-for="LongitudeDMS">Longitude DMS</label>
+                <input asp-for="LongitudeDMS" class="form-control" readonly />
+                <span asp-validation-for="LongitudeDMS" class="text-danger"></span>
+            </div>
+          
             <div class="form-group">
                 <label asp-for="Remarks">Remarks</label>
                 <input asp-for="Remarks" class="form-control" />
@@ -98,11 +108,8 @@
             </div>
         </div>
     </div>
-  @*   <div class="form-group">
-        <div>
-            <img id="flagImage" src="" alt="Flag" style="width: 50px; height: 30px;" />
-        </div>
-    </div> *@
+   
+
     <button style="margin:5px" type="submit" class="btn btn-primary">Submit Activity</button>
 </form>
 
@@ -154,9 +161,28 @@
                     $('#flagImage').attr('src', ''); // Clear the flag image src if no flag state is selected
                 }
             });
+            
         });
 
     </script>
- 
+    <script>
+        function updateLatitudeDMS(element) {
+            var latitudeDMS = document.getElementById("LatitudeDMS");
+            latitudeDMS.value = updateDMS(parseFloat(element.value), 'Latitude');
+        }
+
+        function updateLongitudeDMS(element) {
+            var longitudeDMS = document.getElementById("LongitudeDMS");
+            longitudeDMS.value = updateDMS(parseFloat(element.value), 'Longitude');
+        }
+
+        function updateDMS(value, fieldName) {
+            var degrees = Math.floor(Math.abs(value));
+            var minutes = Math.floor((Math.abs(value) - degrees) * 60);
+            var seconds = ((Math.abs(value) - degrees - (minutes / 60)) * 3600).toFixed(2);
+            var direction = value >= 0 ? (fieldName === 'Latitude' ? 'N' : 'E') : (fieldName === 'Latitude' ? 'S' : 'W');
+            return degrees + "° " + minutes + "' " + seconds + "\" " + direction;
+        }
+    </script>
   
 }
