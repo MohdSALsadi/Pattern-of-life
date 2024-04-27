@@ -1,14 +1,24 @@
 ﻿@model Pattern_of_life.Models.VesselType
 
-<form asp-action="Create" method="post">
-    <!-- Form fields for VesselType properties -->
-    <div class="form-group">
-        <label asp-for="Name"></label>
-        <input asp-for="Name" class="form-control" />
-        <span asp-validation-for="Name" class="text-danger"></span>
+<div class="container mt-5">
+    <div class="card">
+        <div class="card-header">
+            <h5 class="card-title">Create New Vessel Type</h5>
+        </div>
+        <div class="card-body">
+            <form asp-action="Create" method="post">
+                <!-- Form fields for VesselType properties -->
+                <div class="form-group">
+                    <label asp-for="Name"></label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <button style="margin:5px" type="submit" class="btn btn-primary">Create</button>
+            </form>
+        </div>
     </div>
-    <button type="submit" class="btn btn-primary">Create</button>
-</form>
+</div>
+
 
 @section Scripts {
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>

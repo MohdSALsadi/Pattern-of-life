@@ -1,20 +1,25 @@
 ﻿@model Pattern_of_life.Models.FlagState
 
-<form asp-action="Create" method="post" enctype="multipart/form-data">
-    <!-- Form fields for FlagState properties -->
-    <div class="form-group">
-        <label asp-for="Name"></label>
-        <input asp-for="Name" class="form-control" />
-        <span asp-validation-for="Name" class="text-danger"></span>
+<div class="card">
+    <div class="card-body">
+        <form asp-action="Create" method="post" enctype="multipart/form-data">
+            <!-- Form fields for FlagState properties -->
+            <div class="form-group">
+                <label asp-for="Name"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <!-- Add form fields for FlagImagePath -->
+            <div style="margin:5px" class="form-group">
+                <label asp-for="FlagImagePath"></label>
+                <input type="file" id="flagImageInput" name="FlagImage" accept="image/*" class="form-control-file" />
+                <span asp-validation-for="FlagImagePath" class="text-danger"></span>
+            </div>
+            <button style="margin:5px" type="submit" class="btn btn-primary">Create</button>
+        </form>
     </div>
-    <!-- Add form fields for FlagImagePath -->
-    <div class="form-group">
-        <label asp-for="FlagImagePath"></label>
-        <input type="file" id="flagImageInput" name="FlagImage" accept="image/*" class="form-control-file" />
-        <span asp-validation-for="FlagImagePath" class="text-danger"></span>
-    </div>
-    <button style="margin:5px" type="submit" class="btn btn-primary">Create</button>
-</form>
+</div>
+
 
 @section Scripts {
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>

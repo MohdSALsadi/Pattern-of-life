@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Pattern_of_life.Data;
 
@@ -11,9 +12,10 @@ using Pattern_of_life.Data;
 namespace Pattern_of_life.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240416071729_imageOnSHip")]
+    partial class imageOnSHip
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -294,14 +296,15 @@ namespace Pattern_of_life.Migrations
                     b.Property<DateTime>("DTG")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("FlagImagePath")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("FlagStateID")
                         .HasColumnType("int");
 
                     b.Property<int>("IMO")
                         .HasColumnType("int");
-
-                    b.Property<string>("ImagePath")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<double>("Latitude")
                         .HasColumnType("float");
@@ -326,10 +329,6 @@ namespace Pattern_of_life.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Remarks")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("SideNumber")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

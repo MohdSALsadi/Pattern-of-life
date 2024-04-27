@@ -1,48 +1,120 @@
 ﻿@model IEnumerable<Pattern_of_life.Models.ShipActivity>
-<a href="@Url.Action("Create", "ShipActivity")" class="btn btn-success mb-3"><i class="bi bi-plus-circle-dotted"></i> Ship Activity</a>
+<div class="row">
+    <div class="input-group">
+        <input type="search" id="searchInput" class="form-control" placeholder="You Can Search Here...">
+        <span class="input-group-text"><i class="bi bi-search"></i></span>
+    </div>
+</div>
+<div class="container mt-2">
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0"> Activity</h5>
+        </div>
+        <div class="card-body">
 
-<table class="table">
-    <thead>
-        <tr>
+            <div class="text-center">
+                <a href="@Url.Action("Create", "ShipActivity")" class="btn btn-outline-info col-6 mb-3"><i class="bi bi-plus-circle-dotted"></i> Add </a>
+            </div>
+            <div class="row">
+
+
+                <div class="col-4">
+                    <select id="vesselTypeFilter" class="form-select">
+                        <option value="">Select Vessel Type</option>
+                        @foreach (var vesselType in Model.Select(x => x.VesselType?.Name).Where(x => !string.IsNullOrEmpty(x)).Distinct())
+                        {
+                            <option value="@vesselType">@vesselType</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-4">
+                    <select id="flagStateFilter" class="form-select">
+                        <option value="">Select Flag State</option>
+                        @foreach (var flagState in Model.Select(x => x.FlagState?.Name).Where(x => !string.IsNullOrEmpty(x)).Distinct())
+                        {
+                            <option value="@flagState">@flagState</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-4">
+                    <select id="activityNameFilter" class="form-select">
+                        <option value="">Select Activity Name</option>
+                        @foreach (var activityName in Model.Select(x => x.ActivityName?.Name).Where(x => !string.IsNullOrEmpty(x)).Distinct())
+                        {
+                            <option value="@activityName">@activityName</option>
+                        }
+                    </select>
+                </div>
+            </div>
             
-            <th>DTG</th>
-            <th>Name</th>
-            <th>Speed</th>
-            <th>Vessel Type</th>
-            <th>Flag State</th>
-            <th>Activity Name</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var shipActivity in Model)
-        {
-            <tr>
-                <td>@shipActivity.DTG.ToShortDateString()</td>
-                <td>@shipActivity.Name</td>
-                <td>@shipActivity.Speed</td>
-                <td>@(shipActivity.VesselType != null ? shipActivity.VesselType.Name : "N/A")</td>
-                <td>@(shipActivity.FlagState != null ? shipActivity.FlagState.Name : "N/A")</td>
-                <td>@(shipActivity.ActivityName != null ? shipActivity.ActivityName.Name : "N/A")</td>
+                 <form id="filterForm">
+                <div class="row">
+                <!-- Date Range Filter -->
+                <div class="col-4">
+                    <label for="fromDate">From:</label>
+                    <input type="date" class="form-control" id="fromDate" name="fromDate">
+
+                </div>
+                <div class="col-4">
+                    <label for="toDate">To:</label>
+                    <input type="date" class="form-control" id="toDate" name="toDate">
+
+                </div>
+                    <div class=" col-4">
+                        <label for="toDate"> </label>
+                        <button type="submit" class="btn form-control btn-primary">Apply Time Filter</button>
+                    </div>
+                </div>
+
+                </form>
+
+        </div>
+        <table id="shipActivityTable" class="table">
+            <thead>
+                <tr>
+
+                    <th>DTG</th>
+                    <th>Name</th>
+                    <th>IMO</th>
+                    <th>Speed</th>
+                    <th>Vessel Type</th>
+                    <th>Flag State</th>
+                    <th>Activity Name</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var shipActivity in Model)
+                {
+                    <tr>
+                        <td>@shipActivity.DTG.ToShortDateString()</td>
+                        <td>@shipActivity.Name</td>
+                        <td>@shipActivity.IMO</td>
+                        <td>@shipActivity.Speed</td>
+                        <td>@(shipActivity.VesselType != null ? shipActivity.VesselType.Name : "N/A")</td>
+                        <td>@(shipActivity.FlagState != null ? shipActivity.FlagState.Name : "N/A")</td>
+                        <td>@(shipActivity.ActivityName != null ? shipActivity.ActivityName.Name : "N/A")</td>
 
 
-                <td>
-                    <button class="btn btn-info" onclick="showDetails('@shipActivity.ID')"> <i class=" bi bi-eye"></i></button>
+                        <td>
+                            <button class="btn btn-info" onclick="showDetails('@shipActivity.ID')"> <i class=" bi bi-eye"></i></button>
 
-                    <a class="btn btn-primary" href="@Url.Action("Edit", "ShipActivity", new { id = shipActivity.ID })">
-                        <i class="bi bi-pencil-square"></i> <!-- Grgich icon for edit -->
-                    </a>
+                            <a class="btn btn-primary" href="@Url.Action("Edit", "ShipActivity", new { id = shipActivity.ID })">
+                                <i class="bi bi-pencil-square"></i> <!-- Grgich icon for edit -->
+                            </a>
 
-                    <form class="d-inline" asp-action="Delete" asp-route-id="@shipActivity.ID" method="post">
-                        <button type="submit" class="btn btn-danger delete-btn">
-                            <i class="bi bi-trash"></i> <!-- Grgich icon for delete -->
-                        </button>
-                    </form>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+                            <form class="d-inline" asp-action="Delete" asp-route-id="@shipActivity.ID" method="post">
+                                <button type="submit" class="btn btn-danger delete-btn">
+                                    <i class="bi bi-trash"></i> <!-- Grgich icon for delete -->
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
 <!-- Modal for displaying details -->
 <div class="modal fade" id="shipActivityModal" tabindex="-1" role="dialog" aria-labelledby="shipActivityModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -62,6 +134,53 @@
 
 @section Scripts {
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css">
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            var table = $('#shipActivityTable').DataTable({
+                "order": [[0, "desc"]] // Sort by the first column (DTG) in descending order
+            });
+
+            $('#searchInput, #vesselTypeFilter, #flagStateFilter, #activityNameFilter').on('change', function () {
+               
+                // Filter by other criteria
+                table.column(4).search($('#vesselTypeFilter').val()).draw(); // Filter by Vessel Type column (index 3)
+                table.column(5).search($('#flagStateFilter').val()).draw(); // Filter by Flag State column (index 4)
+                table.column(6).search($('#activityNameFilter').val()).draw(); // Filter by Activity Name column (index 5)
+                table.search($('#searchInput').val()).draw(); // Perform global search
+            });
+            $('#filterForm').submit(function (e) {
+                e.preventDefault();
+                var fromDate = $('#fromDate').val();
+                var toDate = $('#toDate').val();
+
+                // Make an AJAX request to retrieve filtered data
+                $.ajax({
+                    url: '@Url.Action("Index")',
+                    type: 'GET',
+                    data: {
+                        fromDate: fromDate,
+                        toDate: toDate
+                    },
+                    success: function (result) {
+                        // Clear the existing DataTable data
+                        table.clear();
+
+                        // Add the filtered data to the DataTable
+                        table.rows.add($(result).find('tbody tr')).draw();
+                    },
+                    error: function (xhr, status, error) {
+                        console.error(xhr.responseText);
+                    }
+                });
+            });
+        });
+
+    </script>
+
     <script>
         function showDetails(id) {
             // AJAX request to load ship activity details into modal body

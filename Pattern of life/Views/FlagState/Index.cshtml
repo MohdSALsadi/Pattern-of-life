@@ -1,34 +1,42 @@
 ﻿@model IEnumerable<Pattern_of_life.Models.FlagState>
-<a href="@Url.Action("Create", "FlagState")" class="btn btn-success mb-3"><i class="bi bi-plus-circle-dotted"></i>  Flag State</a>
+<div class="container mt-5">
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Flag States</h5>
+        </div>
+        <div class="card-body">
+            <a href="@Url.Action("Create", "FlagState")" class="btn btn-outline-info mb-3"><i class="bi bi-plus-circle-dotted"></i> ADD </a>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var flagState in Model)
-        {
-            <tr>
-                <td>@flagState.ID</td>
-                <td>@flagState.Name</td>
-                <td>
-                    <a class="btn btn-primary" href="@Url.Action("Edit", "FlagState", new { id = flagState.ID })">
-                        <i class="bi bi-pencil-square"></i> <!-- Grgich icon for edit -->
-                    </a>
-                    <form class="d-inline" asp-action="Delete" asp-route-id="@flagState.ID" method="post">
-                        <button type="submit" class="btn btn-danger delete-btn">
-                            <i class="bi bi-trash"></i> <!-- Grgich icon for delete -->
-                        </button>
-                    </form>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var flagState in Model)
+                    {
+                        <tr>
+                            <td>@flagState.Name</td>
+                            <td>
+                                <a class="btn btn-primary" href="@Url.Action("Edit", "FlagState", new { id = flagState.ID })">
+                                    <i class="bi bi-pencil-square"></i> <!-- Grgich icon for edit -->
+                                </a>
+                                <form class="d-inline" asp-action="Delete" asp-route-id="@flagState.ID" method="post">
+                                    <button type="submit" class="btn btn-danger delete-btn">
+                                        <i class="bi bi-trash"></i> <!-- Grgich icon for delete -->
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
 
 @section Scripts {
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>

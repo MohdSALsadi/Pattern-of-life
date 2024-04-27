@@ -29,10 +29,6 @@ namespace Pattern_of_life
             builder.Services.AddScoped<ShipActivityDensityCalculator>();
             builder.Services.AddScoped<SettingsRepository>();
 
-
-
-
-
             //builder.Services.AddGoogleMaps(Configuration["GoogleMaps:ApiKey"]);
 
 

@@ -1,19 +1,11 @@
 ﻿@model Dictionary<Tuple<double, double>, double>
 
-<!DOCTYPE html>
-<html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ship Activity Density Map</title>
-    <!-- Include Leaflet CSS -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-    <!-- Include Leaflet.heat CSS -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet.heat/dist/leaflet-heat.css" />
     <style>
         #map {
-            margin: 3%;
-            height: 450px;
+            margin: 1%;
+            height: 650px;
         }
 
         .leaflet-container {
@@ -22,12 +14,12 @@
         }
     </style>
 </head>
-<body>
+
     <button class="btn btn-outline-info" id="updateThreshold">Update Distance Threshold</button>
-  @*   <div class="form-group">
+    <div class="form-group">
         <label for="dateFilter">Select Date:</label>
         <input type="month" id="dateFilter" class="form-control">
-    </div> *@
+    </div>
     <div id="map"></div>
     <!-- Include Leaflet JavaScript -->
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
@@ -40,14 +32,13 @@
     <script>
 
         //تمركز الخريطة على خريطة سلطنة عمان
-        var map = L.map('map').setView([21.6104, 58.5905], 5);
+        var map = L.map('map').setView([21.6104, 58.5905], 6);
 
         // Add a tile layer to the map (OpenStreetMap)
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(map);
 
-        // Iterate over the model data and call the function to add markers
 
         // Create a heat map layer using the density data
         var heatMapData = [
@@ -59,12 +50,11 @@
             @Html.Raw($"[{latitude}, {longitude}, {intensity}*10],")
             // Multiply intensity by 10 for better visualization {intensity}*10]
 
-        }
-                                   ];
+        }];
 
-                // var heat = L.heatLayer(heatMapData, { radius: 25 }).addTo(map);
-                var heat = L.heatLayer(heatMapData, {
-                radius: 5,//نصف قطر الدائرة
+           // var heat = L.heatLayer(heatMapData, { radius: 25 }).addTo(map);
+            var heat = L.heatLayer(heatMapData, {
+                radius: 15,//نصف قطر الدائرة
                 gradient: {
                     0.1: 'yellow', // Yellow for density between 0 and 0.3
                     0.5: 'orange', // Orange for density between 0.4 and 0.7
@@ -75,7 +65,7 @@
         map.on('move', function () {
             map.panTo([23.6104, 58.5905]); // Adjust the map's center to keep it fixed on ship data
         });
-        //marker with a popup label
+        // Iterate over the model data and call the function to add markers
         @foreach (var entry in Model)
         {
             var latitude = entry.Key.Item1;
@@ -123,5 +113,3 @@
         });
     </script>
 
-</body>
-</html>

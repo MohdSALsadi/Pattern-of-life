@@ -26,7 +26,6 @@
 
   <ItemGroup>
     <Folder Include="Models\ViewModel\" />
-    <Folder Include="wwwroot\uploads\" />
   </ItemGroup>
 
 </Project>

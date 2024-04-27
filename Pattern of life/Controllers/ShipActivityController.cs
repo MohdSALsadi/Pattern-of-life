@@ -11,26 +11,40 @@ namespace Pattern_of_life.Controllers
         private readonly IRepository<VesselType> _vesselTypeRepository;
         private readonly IRepository<FlagState> _flagStateRepository;
         private readonly IRepository<ActivityName> _activityNameRepository;
+        private readonly IWebHostEnvironment _hostingEnvironment;
 
+        [ActivatorUtilitiesConstructor]
         public ShipActivityController(
             IRepository<ShipActivity> repository,
             IRepository<VesselType> vesselTypeRepository,
             IRepository<FlagState> flagStateRepository,
-            IRepository<ActivityName> activityNameRepository)
+            IRepository<ActivityName> activityNameRepository
+          ,IWebHostEnvironment hostingEnvironment)
         {
             _repository = repository;
             _vesselTypeRepository = vesselTypeRepository;
             _flagStateRepository = flagStateRepository;
             _activityNameRepository = activityNameRepository;
+            _hostingEnvironment = hostingEnvironment;
+
         }
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(DateTime? fromDate, DateTime? toDate)
         {
             var shipActivities = await _repository.GetAllIncludingAsync(
                 sa => sa.VesselType,
                 sa => sa.FlagState,
                 sa => sa.ActivityName
             );
+            // Apply date range filter if provided
+            if (fromDate != null)
+            {
+                shipActivities = shipActivities.Where(sa => sa.DTG >= fromDate);
+            }
 
+            if (toDate != null)
+            {
+                shipActivities = shipActivities.Where(sa => sa.DTG <= toDate);
+            }
             return View(shipActivities);
         }
 
@@ -66,10 +80,35 @@ namespace Pattern_of_life.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(ShipActivityViewModel viewModel)
+        public async Task<IActionResult> Create(ShipActivityViewModel viewModel, IFormFile? ImagePath)
         {
             if (ModelState.IsValid)
             {
+                /// Check if a file was uploaded
+                if (ImagePath != null && ImagePath.Length > 0)
+                {
+                    // Specify the destination folder to save the file
+                    var uploadsFolder = Path.Combine(_hostingEnvironment.WebRootPath, "uploads");
+
+                    // Ensure the destination folder exists, create it if not
+                    if (!Directory.Exists(uploadsFolder))
+                    {
+                        Directory.CreateDirectory(uploadsFolder);
+                    }
+
+                    // Generate a unique filename for the uploaded file
+                    var uniqueFileName = Guid.NewGuid().ToString() + "_" + ImagePath.FileName;
+                    var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+                    // Save the uploaded file to the server
+                    using (var fileStream = new FileStream(filePath, FileMode.Create))
+                    {
+                        ImagePath.CopyTo(fileStream);
+                    }
+
+                    // Set the FlagImagePath property of the FlagState object to the file path
+                    viewModel.ImagePath = filePath;
+                }
                 var shipActivity = new ShipActivity
                 {
                     // Map properties from viewModel to shipActivity
@@ -78,6 +117,7 @@ namespace Pattern_of_life.Controllers
                     Latitude = viewModel.Latitude,
                     LongitudeDMS = viewModel.LongitudeDMS,
                     LatitudeDMS = viewModel.LatitudeDMS,
+                    ImagePath = viewModel.ImagePath,
                     Course = viewModel.Course,
                     IMO = viewModel.IMO,
                     POB = viewModel.POB,
@@ -86,7 +126,8 @@ namespace Pattern_of_life.Controllers
                     Name = viewModel.Name,
                     VesselTypeID = viewModel.VesselTypeID,
                     FlagStateID = viewModel.FlagStateID,
-                    ActivityNameID = viewModel.ActivityNameID
+                    ActivityNameID = viewModel.ActivityNameID,
+                    SideNumber=viewModel.SideNumber
                 };
                 await _repository.Add(shipActivity);
                 return RedirectToAction(nameof(Index));
@@ -123,6 +164,7 @@ namespace Pattern_of_life.Controllers
                 Name = shipActivity.Name,
                 VesselTypeID = shipActivity.VesselTypeID,
                 FlagStateID = shipActivity.FlagStateID,
+                SideNumber = shipActivity.SideNumber,
                 ActivityNameID = shipActivity.ActivityNameID,
                 VesselTypes = await _vesselTypeRepository.GetAll(),
                 FlagStates = await _flagStateRepository.GetAll(),
